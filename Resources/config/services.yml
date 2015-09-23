@@ -1,0 +1,9 @@
+services:
+    goodman.commander.lockable:
+        class: Guscware\CommanderBundle\EventListener\LockableCommandEventListener
+        arguments:
+          - %commander.lockfile_directory%
+        tags:
+            - { name: kernel.event_listener, method: onConsoleCommand, event: console.command }
+            - { name: kernel.event_listener, method: onConsoleTerminate, event: console.terminate }
+            - { name: kernel.event_listener, method: onConsoleException, event: console.exception }
