@@ -2,7 +2,7 @@
   "name":        "guscware/commander-bundle",
   "type":        "symfony-bundle",
   "description": "Adds more functionality to Symfony 2 commands. Command locking, and various IO helpers.",
-  "keywords":    ["goodman", "symfony", "bundle", "command", "commander"],
+  "keywords":    ["guscware", "symfony", "bundle", "command", "commander", "commander-bundle", "lockable"],
   "homepage":    "http://github.com/gustavs-gutmanis/commander-bundle",
   "license":     "MIT",
 

@@ -6,7 +6,7 @@ Adds more functionality to Symfony 2 commands. Command locking, and various IO h
 
 Use composer:  
 ```bash
-$ composer require goodman/commander-bundle
+$ composer require guscware/commander-bundle
 ```
 
 After downloading, add the bundle to your `AppKernel.php`  

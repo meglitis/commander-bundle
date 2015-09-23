@@ -1,5 +1,5 @@
 services:
-    goodman.commander.lockable:
+    guscware.commander.lockable:
         class: Guscware\CommanderBundle\EventListener\LockableCommandEventListener
         arguments:
           - %commander.lockfile_directory%
