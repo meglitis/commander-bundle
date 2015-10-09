@@ -1,4 +1,5 @@
-# commander-bundle
+# commander-bundle [![Build Status](https://travis-ci.org/guscware/commander-bundle.svg)](https://travis-ci.org/guscware/commander-bundle)
+
 Adds more functionality to Symfony 2 commands. Command locking, and various IO helpers.
 
 1. Installation
