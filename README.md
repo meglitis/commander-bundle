@@ -56,7 +56,7 @@ Constants for these values are provided in the `Commander` class
 
 By implementing the `LockableCommandInterface` in any `Command` you prevent that command from being executed more than once at the same time.
 
-You must implement its' `getLockTimeToLiveInSeconds()` method, which returns an `int` of seconds for how long the lock should be present while the command is executing
+You must implement its `getLockTimeToLiveInSeconds()` method, which returns an `int` of seconds for how long the lock should be present while the command is executing
 
 ```php
 class VeryImportantSingleProcessCommand implements LockableCommandInterface
