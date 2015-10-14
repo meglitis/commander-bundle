@@ -23,8 +23,10 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     public function configCaseProvider()
     {
         return [
-            [['lockfile_directory' => null], ['lockfile_directory' => 'some/test/path']],
-            [['lockfile_directory' => 'test'], ['lockfile_directory' => 'test']],
+            [['lockfile_directory' => null], ['lockfile_directory' => 'some/test/path', 'auto_unlock_after' => 300]],
+            [['lockfile_directory' => 'test'], ['lockfile_directory' => 'test', 'auto_unlock_after' => 300]],
+            [['lockfile_directory' => 'test', 'auto_unlock_after' => 200], ['lockfile_directory' => 'test', 'auto_unlock_after' => 200]],
+            [['lockfile_directory' => 'test', 'auto_unlock_after' => null], ['lockfile_directory' => 'test', 'auto_unlock_after' => 300]],
         ];
     }
 }

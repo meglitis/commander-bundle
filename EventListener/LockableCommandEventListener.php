@@ -15,14 +15,18 @@ class LockableCommandEventListener
     /** @var string */
     private $lockFileDirPath;
 
+    /** @var int */
+    private $autoUnlockAfter;
+
     /**
      * LockableCommandEventListener constructor.
      *
      * @param string $lockFileDir
+     * @param int    $autoUnlockAfter
      *
      * @throws LockFileDirectoryException
      */
-    public function __construct($lockFileDir)
+    public function __construct($lockFileDir, $autoUnlockAfter)
     {
         if (!file_exists($lockFileDir) || !is_dir($lockFileDir)) {
             $dirCreated = mkdir($lockFileDir, 0770, true);
@@ -32,6 +36,7 @@ class LockableCommandEventListener
         }
 
         $this->lockFileDirPath = $lockFileDir;
+        $this->autoUnlockAfter = (int)$autoUnlockAfter;
     }
 
     /**
@@ -50,7 +55,7 @@ class LockableCommandEventListener
         $command = $event->getCommand();
 
         if ($command instanceof LockableCommandInterface) {
-            $lockFileLifespanInSeconds = (int)$command->getLockTimeToLiveInSeconds();
+            $lockFileLifespanInSeconds = $this->autoUnlockAfter;
             $lockFilePath = $this->getLockFilePathFromClass($command);
 
             if (file_exists($lockFilePath)) {

@@ -2,17 +2,17 @@
 
 namespace Guscware\CommanderBundle\Command;
 
+/**
+ * Interface LockableCommandInterface
+ *
+ * By implementing this interface in a Command, Symfony's event listener will listen for command
+ * events for execute, exception and terminate, and create, check and remove a .lock file accordingly
+ *
+ * The .lock file lives for 5 minutes by default, which means that if the command died unexpectedly,
+ * it won't be able to launch again until those 5 minutes have passed.
+ * You can configure the lifetime of the lockfile by passing the "auto_unlock_after" config parameter
+ * and specifying an amount in seconds.
+ */
 interface LockableCommandInterface
 {
-    /**
-     * Return the amount of seconds a lockfile will auto-unlock in
-     *
-     * e.g. - if it returns 30, then even if the command is still running in 30 seconds, another instance
-     * will be able to run, since the modification date of the lockfile will have outlived itself
-     *
-     * For 30 seconds though no other process will be able to run this command in parallel
-     *
-     * @return int
-     */
-    public function getLockTimeToLiveInSeconds();
 }

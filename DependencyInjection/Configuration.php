@@ -12,6 +12,8 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    const DEFAULT_AUTO_UNLOCK_AFTER = 300; // After 5 minutes
+
     /** @var string */
     private $lockfilePath;
 
@@ -40,6 +42,11 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue($this->lockfilePath)
                     ->treatNullLike($this->lockfilePath)
+                ->end()
+                ->scalarNode('auto_unlock_after')
+                    ->cannotBeEmpty()
+                    ->defaultValue(self::DEFAULT_AUTO_UNLOCK_AFTER)
+                    ->treatNullLike(self::DEFAULT_AUTO_UNLOCK_AFTER)
                 ->end()
             ->end();
 

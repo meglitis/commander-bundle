@@ -12,6 +12,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class LockableCommandEventListenerTest extends \PHPUnit_Framework_TestCase
 {
+    const LOCKFILE_UNLOCK_AFTER = 25;
+
     /** @var string */
     private static $lockFileDir;
 
@@ -42,13 +44,13 @@ class LockableCommandEventListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Guscware\CommanderBundle\Exceptions\LockFilePresentException
-     * @expectedExceptionMessage Lockfile present. <comment>0m 20s</comment> until automatic unlock
+     * @expectedExceptionMessageRegExp /Lockfile present. \<comment\>0m 2[0-5]s\<\/comment\> until automatic unlock/
      *
      * @throws \Guscware\CommanderBundle\Exceptions\LockFilePresentException
      */
     public function testLockFileWorksOnSecondRun()
     {
-        $lockableListener = new LockableCommandEventListener(self::$lockFileDir);
+        $lockableListener = new LockableCommandEventListener(self::$lockFileDir, self::LOCKFILE_UNLOCK_AFTER);
         $commandMock      = $this->getCommandMockForCommand();
         $commandEventMock = $this->getConsoleCommandEventMock($commandMock);
         $lockfile         = $this->getCommandLockfilePath($commandMock);
@@ -61,7 +63,7 @@ class LockableCommandEventListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOldLockfileMTimeOverwritten()
     {
-        $lockableListener = new LockableCommandEventListener(self::$lockFileDir);
+        $lockableListener = new LockableCommandEventListener(self::$lockFileDir, self::LOCKFILE_UNLOCK_AFTER);
         $commandMock      = $this->getCommandMockForCommand();
         $commandEventMock = $this->getConsoleCommandEventMock($commandMock);
         $lockfile         = $this->getCommandLockfilePath($commandMock);
@@ -80,7 +82,7 @@ class LockableCommandEventListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testLockFileDeletedAfterSuccessfulRun()
     {
-        $lockableListener   = new LockableCommandEventListener(self::$lockFileDir);
+        $lockableListener   = new LockableCommandEventListener(self::$lockFileDir, self::LOCKFILE_UNLOCK_AFTER);
         $commandMock        = $this->getCommandMockForTerminate();
         $terminateEventMock = $this->getConsoleTerminateEventMock($commandMock);
         $lockfile           = $this->getCommandLockfilePath($commandMock);
@@ -99,7 +101,7 @@ class LockableCommandEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testLockFileNotDeletedAfterLockFilePresentException()
     {
-        $lockableListener = new LockableCommandEventListener(self::$lockFileDir);
+        $lockableListener = new LockableCommandEventListener(self::$lockFileDir, self::LOCKFILE_UNLOCK_AFTER);
         $commandMock      = $this->getCommandMockForCommand();
         $commandEventMock = $this->getConsoleCommandEventMock($commandMock);
         $lockfile         = $this->getCommandLockfilePath($commandMock);
@@ -197,11 +199,6 @@ class LockableCommandEventListenerTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder(TestableLockableCommand::class)
             ->getMock();
 
-        $lockableCommand
-            ->expects($this->atLeastOnce())
-            ->method('getLockTimeToLiveInSeconds')
-            ->willReturn(20);
-
         return $lockableCommand;
     }
 
@@ -215,36 +212,11 @@ class LockableCommandEventListenerTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder(TestableLockableCommand::class)
             ->getMock();
 
-        $lockableCommand
-            ->expects($this->never())
-            ->method('getLockTimeToLiveInSeconds');
-
         return $lockableCommand;
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ConsoleOutput
-     */
-    private function getOutputInterfaceMock()
-    {
-        /** @var ConsoleOutput|\PHPUnit_Framework_MockObject_MockObject $outputInterface */
-        $outputInterface = $this
-            ->getMockBuilder(ConsoleOutput::class)
-            ->getMock();
-
-        $outputInterface
-            ->expects($this->once())
-            ->method('writeln');
-
-        return $outputInterface;
     }
 }
 
 
 class TestableLockableCommand implements LockableCommandInterface
 {
-    public function getLockTimeToLiveInSeconds()
-    {
-        return 20;
-    }
 }
