@@ -77,7 +77,7 @@ class LockableCommandEventListener
 
             clearstatcache();
             $pid = posix_getpid();
-            file_put_contents($pid, $lockFilePath) or die ('Cannot create lock file');
+            file_put_contents($lockFilePath, $pid) or die ('Cannot create lock file');
         }
     }
 
